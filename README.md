@@ -1,0 +1,1 @@
+# prisma-grpc-generator
