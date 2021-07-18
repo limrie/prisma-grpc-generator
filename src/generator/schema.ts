@@ -8,8 +8,8 @@ const TypeMap = {
     Int: 'sint32',
     BigInt: 'sint64',
     Float: 'float',
-    DateTime: 'google.proto.Timestamp',
-    Json: 'google.proto.Struct',
+    DateTime: 'google.protobuf.Timestamp',
+    Json: 'google.protobuf.Struct',
     Bytes: 'bytes'
 }
 

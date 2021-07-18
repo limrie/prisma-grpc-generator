@@ -3,22 +3,26 @@
 exports[`generate grpc schema 1`] = `
 "syntax = \\"proto3\\";
 
-message User {
+import \\"google/protobuf/timestamp.proto\\";
+import \\"google/protobuf/struct.proto\\";
 
+
+message User {
     string id = 0;
-    string first_name = 1;
-    string last_name = 2;
-    string email = 3;
-    repeated Post posts = 4;
+    google.protobuf.Timestamp created_at = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string email = 4;
+    repeated Post posts = 5;
 }
 
 message Post {
-
     string id = 0;
-    string title = 1;
-    string body = 2;
-    sint32 views = 3;
-    User author = 4;
-    string author_id = 5;
+    google.protobuf.Timestamp created_at = 1;
+    string title = 2;
+    string body = 3;
+    sint32 views = 4;
+    User author = 5;
+    string author_id = 6;
 }"
 `;

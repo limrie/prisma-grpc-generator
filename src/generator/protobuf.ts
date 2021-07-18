@@ -27,13 +27,11 @@ const WELL_KNOWN_TYPES = {
     'google.proto.Struct': 'google/protobuf/struct.proto'
 }
 
-export default async (root: Root, imports = WELL_KNOWN_TYPES) : Promise<string> => {
-  let out : string[] = [], 
-    pkg : string[] = [],
-    indent = 0,
-    first = false,
-    ptr : Namespace = root,
-    repeat = true
+const DEFAULT_PACKAGE_NAME = ""
+
+export default async (root: Root, pkg = DEFAULT_PACKAGE_NAME, imports = WELL_KNOWN_TYPES) : Promise<string> => {
+  const out : string[] = []
+  let indent = 0
 
     const importPaths = Object.values(imports).reduce((agg : string[], p) => agg.includes(p) ? agg : [...agg, p], [])
 
@@ -51,25 +49,14 @@ export default async (root: Root, imports = WELL_KNOWN_TYPES) : Promise<string> 
     }
 
     root.resolveAll()
-    
-    do {
-        let nested = ptr.nestedArray
-        if (nested.length == 1 && nested[0] instanceof Namespace && !(nested[0] instanceof Type || nested[0] instanceof Service)) {
-            ptr = nested[0]
-            if (ptr !== root) {
-                pkg.push(ptr.name)
-            }
-        } else {
-            repeat = false
-        }
-    } while (repeat)
 
     out.push(`syntax = "proto3";`)
     if(pkg.length) 
-      out.push('', `package ${pkg.join('.')};`)
-    buildOptions(ptr)
+      out.push('', `package ${pkg};`)
+    buildOptions(root)
+    buildImports()
     out.push('')
-    ptr.nestedArray.forEach(build)
+    root.nestedArray.forEach(build)
     return out.join("\n")
 
 
@@ -114,10 +101,10 @@ export default async (root: Root, imports = WELL_KNOWN_TYPES) : Promise<string> 
         push("")
         push(`message ${obj.name} {`)
         ++indent
-        buildOptions(obj)
+        const built = buildOptions(obj)
+        if (built) 
+            push('')
         obj.oneofsArray.forEach(build)
-        if(obj.fieldsArray.length) 
-          push("")
         obj.fieldsArray.forEach(build)
         obj.nestedArray.forEach(build)
         buildRanges('reserved', obj.reserved)
@@ -200,13 +187,7 @@ export default async (root: Root, imports = WELL_KNOWN_TYPES) : Promise<string> 
     }
 
     function buildNamespace(obj: Namespace) {
-        push("")
-        push(`message ${obj.name} {`)
-        ++indent
-        buildOptions(obj)
-        obj.nestedArray.forEach(build)
-        --indent
-        push('}')
+        // skip - this should mean something has come from an import
     }
 
     function buildOptions(obj: ReflectionObject) {
