@@ -4,8 +4,6 @@ exports[`generate grpc schema 1`] = `
 "syntax = \\"proto3\\";
 
 import \\"google/protobuf/timestamp.proto\\";
-import \\"google/protobuf/struct.proto\\";
-
 
 message User {
     string id = 0;

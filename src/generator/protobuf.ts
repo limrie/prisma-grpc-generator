@@ -1,4 +1,3 @@
-import { type } from 'os'
 import Protobuf, { Enum, Field, MapField, Method, Namespace, OneOf, ReflectionObject, Root, Service, Type } from 'protobufjs'
 
 const snakecase = (str: string) : string => str.substr(0, 1) 
@@ -22,16 +21,16 @@ const value = (v: any) => {
     }
 }
 
-const WELL_KNOWN_TYPES = {
-    'google.proto.Timestamp': 'google/protobuf/timestamp.proto',
-    'google.proto.Struct': 'google/protobuf/struct.proto'
+export const WELL_KNOWN_TYPES = {
+    'google.protobuf.Timestamp': 'google/protobuf/timestamp.proto',
+    'google.protobuf.Struct': 'google/protobuf/struct.proto'
 }
 
-const DEFAULT_PACKAGE_NAME = ""
-
-export default async (root: Root, pkg = DEFAULT_PACKAGE_NAME, imports = WELL_KNOWN_TYPES) : Promise<string> => {
-  const out : string[] = []
-  let indent = 0
+export default async (root: Root, pkg = '', imports = WELL_KNOWN_TYPES) : Promise<string> => {
+    const out : string[] = []
+    const preamble : string[] = []
+    const imported : string[] = []
+    let indent = 0
 
     const importPaths = Object.values(imports).reduce((agg : string[], p) => agg.includes(p) ? agg : [...agg, p], [])
 
@@ -54,10 +53,15 @@ export default async (root: Root, pkg = DEFAULT_PACKAGE_NAME, imports = WELL_KNO
     if(pkg.length) 
       out.push('', `package ${pkg};`)
     buildOptions(root)
-    buildImports()
-    out.push('')
+
+    preamble.push(...out)
+    out.splice(0, out.length)
+
     root.nestedArray.forEach(build)
-    return out.join("\n")
+
+    buildImports()
+
+    return preamble.concat(out).join("\n")
 
 
     function build(object: ReflectionObject) {
@@ -95,9 +99,6 @@ export default async (root: Root, pkg = DEFAULT_PACKAGE_NAME, imports = WELL_KNO
     }
 
     function buildType(obj: Type) {
-        if (imports.hasOwnProperty(obj.fullName)) 
-            return
-
         push("")
         push(`message ${obj.name} {`)
         ++indent
@@ -126,6 +127,9 @@ export default async (root: Root, pkg = DEFAULT_PACKAGE_NAME, imports = WELL_KNO
           sb.push(opts)
         
         push(sb.join(" ") + ';')
+
+        if(imports.hasOwnProperty(obj.type) && !imported.includes(imports[obj.type as keyof typeof imports])) 
+            imported.push(imports[obj.type as keyof typeof imports])
     }
 
     function buildFieldOptions(obj: Field) : string | void | null {
@@ -219,11 +223,11 @@ export default async (root: Root, pkg = DEFAULT_PACKAGE_NAME, imports = WELL_KNO
     }
 
     function buildImports() {
-        if(importPaths.length) 
-          push("")
+        if (imported.length)
+            preamble.push('')
 
-        importPaths.forEach(path => {
-            push(`import "${path}";`)
+        imported.forEach(path => {
+            preamble.push(`import "${path}";`)
         })
     }
 }

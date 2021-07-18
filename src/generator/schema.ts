@@ -76,6 +76,6 @@ export const mapSchema = (doc: DMMF.Document) : Root => {
     return root
 }
 
-export const writeProto = (root: Root) => {
-    return proto(root)
+export const writeProto = (root: Root, pkg = '') => {
+    return proto(root, pkg)
 }
