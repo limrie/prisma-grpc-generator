@@ -105,6 +105,7 @@ const mapModel = (model: DMMF.Model) : ReflectionObject[] => {
     })
     findUniqueInput.add(new OneOf('where', uniqueFields.map(f => f.name)))
     findUniqueRequest.add(findUniqueInput)
+    findUniqueRequest.add(new Field(camelCased, 1, findUniqueInput.name))
 
     const findUniqueResponse = new Type(`FindUnique${model.name}Response`)
     findUniqueResponse.add(new Field(camelCased, 1, mapped.name))
@@ -154,7 +155,7 @@ const mapModel = (model: DMMF.Model) : ReflectionObject[] => {
     service.add(new Method(`delete${model.name}`, 'rpc', deleter.name, deleted.name))
 
     const manyDeleter = new Type(`DeleteMany${pluralized}Requests`)
-    manyDeleter.add(new Field('where', 1, findManyInput.name))
+    manyDeleter.add(new Field(camelCased, 1, findManyInput.name))
     const manyDeleted = new Type(`DeleteMany${pluralized}Reponse`)
     manyDeleted.add(new Field('count', 1, 'uint32'))
     service.add(new Method(`deleteMany${pluralized}`, 'rpc', manyDeleter.name, manyDeleted.name))
