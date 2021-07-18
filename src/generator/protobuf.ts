@@ -95,7 +95,7 @@ export default async (root: Root, pkg = '', imports = WELL_KNOWN_TYPES) : Promis
             push(`${name} = ${val};`)
         })
         --indent
-        push("")
+        push("}")
     }
 
     function buildType(obj: Type) {
