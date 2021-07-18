@@ -99,6 +99,8 @@ export default async (root: Root, pkg = '', imports = WELL_KNOWN_TYPES) : Promis
     }
 
     function buildType(obj: Type) {
+        const oneOfFields = obj.oneofsArray.map(ofs => ofs.fieldsArray.map(f => f.name)).flat()
+
         push("")
         push(`message ${obj.name} {`)
         ++indent
@@ -106,7 +108,7 @@ export default async (root: Root, pkg = '', imports = WELL_KNOWN_TYPES) : Promis
         if (built) 
             push('')
         obj.oneofsArray.forEach(build)
-        obj.fieldsArray.forEach(build)
+        obj.fieldsArray.filter(field => !oneOfFields.includes(field.name)).forEach(build)
         obj.nestedArray.forEach(build)
         buildRanges('reserved', obj.reserved)
         --indent
