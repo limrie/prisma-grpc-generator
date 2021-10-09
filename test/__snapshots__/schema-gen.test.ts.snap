@@ -1,5 +1,558 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`generate grpc schema (mongo) 1`] = `
+"syntax = \\"proto3\\";
+
+import \\"google/protobuf/timestamp.proto\\";
+
+enum SortOrder {
+    ASC = 0;
+    DESC = 1;
+}
+
+message StringWhereInput {
+    string equals = 1;
+    repeated string in = 2;
+}
+
+message DateTimeWhereInput {
+    google.protobuf.Timestamp equals = 1;
+    repeated google.protobuf.Timestamp in = 2;
+}
+
+message BooleanWhereInput {
+    bool equals = 1;
+    repeated bool in = 2;
+}
+
+enum Role {
+    UNKNOWN = 0;
+    USER = 1;
+    ADMIN = 2;
+}
+
+message User {
+    string id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    string email = 3;
+    string name = 4;
+    Role role = 5;
+    repeated Post posts = 6;
+}
+
+enum UserScalarField {
+    UNKNOWN = 0;
+    id = 1;
+    createdAt = 2;
+    email = 3;
+    name = 4;
+}
+
+message CreateUserRequest {
+    CreateUserInput user = 1;
+}
+
+message CreateUserInput {
+    string id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    string email = 3;
+    string name = 4;
+    Role role = 5;
+}
+
+message CreateUserResponse {
+    User user = 1;
+}
+
+message CreateManyUsersRequest {
+    repeated CreateUserInput users = 1;
+}
+
+message CreateManyUsersResponse {
+    repeated User users = 1;
+}
+
+message FindUniqueUserRequest {
+    UserWhereUniqueInput user = 1;
+}
+
+message UserWhereUniqueInput {
+    oneof where {
+        string id = 0;
+        string email = 1;
+    }
+}
+
+message FindUniqueUserResponse {
+    User user = 1;
+}
+
+message FindManyUsersRequest {
+    UserWhereInput where = 1;
+    repeated UserOrderByInput order_by = 2;
+    UserWhereUniqueInput cursor = 3;
+    uint32 take = 4;
+    int32 skip = 5;
+    repeated UserScalarField distinct = 6;
+}
+
+message UserWhereInput {
+    repeated UserWhereInput and = 1;
+    repeated UserWhereInput or = 2;
+    repeated UserWhereInput not = 3;
+    StringWhereInput id = 4;
+    DateTimeWhereInput created_at = 5;
+    StringWhereInput email = 6;
+    StringWhereInput name = 7;
+}
+
+message FindManyUsersResponse {
+    repeated User users = 1;
+}
+
+message FindManyUsersStreamResponse {
+    oneof case {
+        User user = 1;
+    }
+}
+
+message UserOrderByInput {
+    oneof field {
+        SortOrder id = 1;
+        SortOrder created_at = 2;
+        SortOrder email = 3;
+        SortOrder name = 4;
+    }
+}
+
+message DeleteUserRequest {
+    UserWhereUniqueInput user = 1;
+}
+
+message DeleteUserResponse {
+    User user = 1;
+}
+
+message DeleteManyUsersRequests {
+    UserWhereInput user = 1;
+}
+
+message DeleteManyUsersReponse {
+    uint32 count = 1;
+}
+service UserService {
+    rpc createUser (CreateUserRequest) returns (CreateUserResponse) {}
+    rpc createManyUsers (CreateManyUsersRequest) returns (CreateManyUsersResponse) {}
+    rpc findUniqueUser (FindUniqueUserRequest) returns (User) {}
+    rpc findManyUsers (FindManyUsersRequest) returns (FindManyUsersResponse) {}
+    rpc findManyUsersStreamed (FindManyUsersRequest) returns (stream FindManyUsersStreamResponse) {}
+    rpc deleteUser (DeleteUserRequest) returns (DeleteUserResponse) {}
+    rpc deleteManyUsers (DeleteManyUsersRequests) returns (DeleteManyUsersReponse) {}
+}
+
+message Post {
+    string id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    google.protobuf.Timestamp updated_at = 3;
+    bool published = 4;
+    string title = 5;
+    User author = 6;
+}
+
+enum PostScalarField {
+    UNKNOWN = 0;
+    id = 1;
+    createdAt = 2;
+    updatedAt = 3;
+    published = 4;
+    title = 5;
+    authorId = 6;
+}
+
+message CreatePostRequest {
+    CreatePostInput post = 1;
+}
+
+message CreatePostInput {
+    string id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    google.protobuf.Timestamp updated_at = 3;
+    bool published = 4;
+    string title = 5;
+}
+
+message CreatePostResponse {
+    Post post = 1;
+}
+
+message CreateManyPostsRequest {
+    repeated CreatePostInput posts = 1;
+}
+
+message CreateManyPostsResponse {
+    repeated Post posts = 1;
+}
+
+message FindUniquePostRequest {
+    PostWhereUniqueInput post = 1;
+}
+
+message PostWhereUniqueInput {
+    oneof where {
+        string id = 0;
+    }
+}
+
+message FindUniquePostResponse {
+    Post post = 1;
+}
+
+message FindManyPostsRequest {
+    PostWhereInput where = 1;
+    repeated PostOrderByInput order_by = 2;
+    PostWhereUniqueInput cursor = 3;
+    uint32 take = 4;
+    int32 skip = 5;
+    repeated PostScalarField distinct = 6;
+}
+
+message PostWhereInput {
+    repeated PostWhereInput and = 1;
+    repeated PostWhereInput or = 2;
+    repeated PostWhereInput not = 3;
+    StringWhereInput id = 4;
+    DateTimeWhereInput created_at = 5;
+    DateTimeWhereInput updated_at = 6;
+    BooleanWhereInput published = 7;
+    StringWhereInput title = 8;
+    StringWhereInput author_id = 9;
+}
+
+message FindManyPostsResponse {
+    repeated Post posts = 1;
+}
+
+message FindManyPostsStreamResponse {
+    oneof case {
+        Post post = 1;
+    }
+}
+
+message PostOrderByInput {
+    oneof field {
+        SortOrder id = 1;
+        SortOrder created_at = 2;
+        SortOrder updated_at = 3;
+        SortOrder published = 4;
+        SortOrder title = 5;
+    }
+}
+
+message DeletePostRequest {
+    PostWhereUniqueInput post = 1;
+}
+
+message DeletePostResponse {
+    Post post = 1;
+}
+
+message DeleteManyPostsRequests {
+    PostWhereInput post = 1;
+}
+
+message DeleteManyPostsReponse {
+    uint32 count = 1;
+}
+service PostService {
+    rpc createPost (CreatePostRequest) returns (CreatePostResponse) {}
+    rpc createManyPosts (CreateManyPostsRequest) returns (CreateManyPostsResponse) {}
+    rpc findUniquePost (FindUniquePostRequest) returns (Post) {}
+    rpc findManyPosts (FindManyPostsRequest) returns (FindManyPostsResponse) {}
+    rpc findManyPostsStreamed (FindManyPostsRequest) returns (stream FindManyPostsStreamResponse) {}
+    rpc deletePost (DeletePostRequest) returns (DeletePostResponse) {}
+    rpc deleteManyPosts (DeleteManyPostsRequests) returns (DeleteManyPostsReponse) {}
+}"
+`;
+
+exports[`generate grpc schema (postgresql) 1`] = `
+"syntax = \\"proto3\\";
+
+import \\"google/protobuf/timestamp.proto\\";
+
+enum SortOrder {
+    ASC = 0;
+    DESC = 1;
+}
+
+message IntWhereInput {
+    sint32 equals = 1;
+    repeated sint32 in = 2;
+}
+
+message DateTimeWhereInput {
+    google.protobuf.Timestamp equals = 1;
+    repeated google.protobuf.Timestamp in = 2;
+}
+
+message StringWhereInput {
+    string equals = 1;
+    repeated string in = 2;
+}
+
+message BooleanWhereInput {
+    bool equals = 1;
+    repeated bool in = 2;
+}
+
+enum Role {
+    UNKNOWN = 0;
+    USER = 1;
+    ADMIN = 2;
+}
+
+message User {
+    sint32 id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    string email = 3;
+    string name = 4;
+    Role role = 5;
+    repeated Post posts = 6;
+}
+
+enum UserScalarField {
+    UNKNOWN = 0;
+    id = 1;
+    createdAt = 2;
+    email = 3;
+    name = 4;
+}
+
+message CreateUserRequest {
+    CreateUserInput user = 1;
+}
+
+message CreateUserInput {
+    sint32 id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    string email = 3;
+    string name = 4;
+    Role role = 5;
+}
+
+message CreateUserResponse {
+    User user = 1;
+}
+
+message CreateManyUsersRequest {
+    repeated CreateUserInput users = 1;
+}
+
+message CreateManyUsersResponse {
+    repeated User users = 1;
+}
+
+message FindUniqueUserRequest {
+    UserWhereUniqueInput user = 1;
+}
+
+message UserWhereUniqueInput {
+    oneof where {
+        sint32 id = 0;
+        string email = 1;
+    }
+}
+
+message FindUniqueUserResponse {
+    User user = 1;
+}
+
+message FindManyUsersRequest {
+    UserWhereInput where = 1;
+    repeated UserOrderByInput order_by = 2;
+    UserWhereUniqueInput cursor = 3;
+    uint32 take = 4;
+    int32 skip = 5;
+    repeated UserScalarField distinct = 6;
+}
+
+message UserWhereInput {
+    repeated UserWhereInput and = 1;
+    repeated UserWhereInput or = 2;
+    repeated UserWhereInput not = 3;
+    IntWhereInput id = 4;
+    DateTimeWhereInput created_at = 5;
+    StringWhereInput email = 6;
+    StringWhereInput name = 7;
+}
+
+message FindManyUsersResponse {
+    repeated User users = 1;
+}
+
+message FindManyUsersStreamResponse {
+    oneof case {
+        User user = 1;
+    }
+}
+
+message UserOrderByInput {
+    oneof field {
+        SortOrder id = 1;
+        SortOrder created_at = 2;
+        SortOrder email = 3;
+        SortOrder name = 4;
+    }
+}
+
+message DeleteUserRequest {
+    UserWhereUniqueInput user = 1;
+}
+
+message DeleteUserResponse {
+    User user = 1;
+}
+
+message DeleteManyUsersRequests {
+    UserWhereInput user = 1;
+}
+
+message DeleteManyUsersReponse {
+    uint32 count = 1;
+}
+service UserService {
+    rpc createUser (CreateUserRequest) returns (CreateUserResponse) {}
+    rpc createManyUsers (CreateManyUsersRequest) returns (CreateManyUsersResponse) {}
+    rpc findUniqueUser (FindUniqueUserRequest) returns (User) {}
+    rpc findManyUsers (FindManyUsersRequest) returns (FindManyUsersResponse) {}
+    rpc findManyUsersStreamed (FindManyUsersRequest) returns (stream FindManyUsersStreamResponse) {}
+    rpc deleteUser (DeleteUserRequest) returns (DeleteUserResponse) {}
+    rpc deleteManyUsers (DeleteManyUsersRequests) returns (DeleteManyUsersReponse) {}
+}
+
+message Post {
+    sint32 id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    google.protobuf.Timestamp updated_at = 3;
+    bool published = 4;
+    string title = 5;
+    User author = 6;
+}
+
+enum PostScalarField {
+    UNKNOWN = 0;
+    id = 1;
+    createdAt = 2;
+    updatedAt = 3;
+    published = 4;
+    title = 5;
+    authorId = 6;
+}
+
+message CreatePostRequest {
+    CreatePostInput post = 1;
+}
+
+message CreatePostInput {
+    sint32 id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    google.protobuf.Timestamp updated_at = 3;
+    bool published = 4;
+    string title = 5;
+}
+
+message CreatePostResponse {
+    Post post = 1;
+}
+
+message CreateManyPostsRequest {
+    repeated CreatePostInput posts = 1;
+}
+
+message CreateManyPostsResponse {
+    repeated Post posts = 1;
+}
+
+message FindUniquePostRequest {
+    PostWhereUniqueInput post = 1;
+}
+
+message PostWhereUniqueInput {
+    oneof where {
+        sint32 id = 0;
+    }
+}
+
+message FindUniquePostResponse {
+    Post post = 1;
+}
+
+message FindManyPostsRequest {
+    PostWhereInput where = 1;
+    repeated PostOrderByInput order_by = 2;
+    PostWhereUniqueInput cursor = 3;
+    uint32 take = 4;
+    int32 skip = 5;
+    repeated PostScalarField distinct = 6;
+}
+
+message PostWhereInput {
+    repeated PostWhereInput and = 1;
+    repeated PostWhereInput or = 2;
+    repeated PostWhereInput not = 3;
+    IntWhereInput id = 4;
+    DateTimeWhereInput created_at = 5;
+    DateTimeWhereInput updated_at = 6;
+    BooleanWhereInput published = 7;
+    StringWhereInput title = 8;
+    IntWhereInput author_id = 9;
+}
+
+message FindManyPostsResponse {
+    repeated Post posts = 1;
+}
+
+message FindManyPostsStreamResponse {
+    oneof case {
+        Post post = 1;
+    }
+}
+
+message PostOrderByInput {
+    oneof field {
+        SortOrder id = 1;
+        SortOrder created_at = 2;
+        SortOrder updated_at = 3;
+        SortOrder published = 4;
+        SortOrder title = 5;
+    }
+}
+
+message DeletePostRequest {
+    PostWhereUniqueInput post = 1;
+}
+
+message DeletePostResponse {
+    Post post = 1;
+}
+
+message DeleteManyPostsRequests {
+    PostWhereInput post = 1;
+}
+
+message DeleteManyPostsReponse {
+    uint32 count = 1;
+}
+service PostService {
+    rpc createPost (CreatePostRequest) returns (CreatePostResponse) {}
+    rpc createManyPosts (CreateManyPostsRequest) returns (CreateManyPostsResponse) {}
+    rpc findUniquePost (FindUniquePostRequest) returns (Post) {}
+    rpc findManyPosts (FindManyPostsRequest) returns (FindManyPostsResponse) {}
+    rpc findManyPostsStreamed (FindManyPostsRequest) returns (stream FindManyPostsStreamResponse) {}
+    rpc deletePost (DeletePostRequest) returns (DeletePostResponse) {}
+    rpc deleteManyPosts (DeleteManyPostsRequests) returns (DeleteManyPostsReponse) {}
+}"
+`;
+
 exports[`generate grpc schema 1`] = `
 "syntax = \\"proto3\\";
 
